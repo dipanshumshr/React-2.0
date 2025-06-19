@@ -1,33 +1,73 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { nanoid } from '@reduxjs/toolkit'
 import './App.css'
+import Fruits from './Fruits'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const[formData, setFormData] = useState([{
+    id : nanoid(10),
+    name : "",
+    weight : "",
+    sku : ""
+  }])
+
+  function handleUpdate(fruit)
+  {
+    setFormData(prev => (prev.map ( value => 
+      value.id === fruit.id? fruit : value
+    )))
+  }
+
+  function AddFruits()
+  {
+    setFormData(prev => ([...prev,{
+      id : nanoid(15),
+      name : "",
+      weight : "",
+      sku : ""
+    }]))
+  }
+
+  function removeFruit(id)
+  {
+    setFormData(prev => prev.filter(value=> value.id !== id ));
+  }
+
+  function duplicate(id)
+  {
+    setFormData(prev => {
+        const index = prev.findIndex(item => item.id === id)
+        if(index === -1)
+        {
+          return prev
+        }
+
+        const duplicateItem = prev[index]
+
+        const updatedDuplicate = {...duplicateItem, id: nanoid(10)}
+
+        const updatedItems = [...prev.slice(0,index+1),
+          updatedDuplicate,
+          ...prev.slice(index+1)
+        ]
+
+        return updatedItems
+    })
+  }
+
+  function handleSubmit()
+  {
+    console.log(formData);
+  }
 
   return (
     <>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        {formData.map(value => 
+          <Fruits key={value.id} onAdd = {AddFruits} onRemove = {removeFruit} onDuplicate = {duplicate} fruits={value} onUpdate = {handleUpdate} />
+        )}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <button onClick={handleSubmit}>Submit</button>
     </>
   )
 }
