@@ -1,14 +1,27 @@
 import './App.css'
+import TodoInput from './Component/TodoInput'
 import Todos from './Component/Todos'
 import Todo from './Models/Todo'
+import { useState } from "react"
 
 function App() {
 
-  const TodoArr = [new Todo("Learn React"), new Todo("Learn Typescript")]
+  const [TodoState, setTodoState] = useState<Todo[]>([]);
+
+  // const TodoArr = [new Todo("Learn React"), new Todo("Learn Typescript")]
+
+  function handleTodos(Todo : Todo)
+  {
+    setTodoState(prev => {
+      const updated = [...prev, Todo]
+      return updated
+    })
+  }
 
   return (
     <>
-        <Todos TodosList={TodoArr}/>
+        <TodoInput submitTodo={handleTodos}/>
+        <Todos TodosList={TodoState}/>
     </>
   )
 }
