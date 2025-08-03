@@ -1,0 +1,67 @@
+/* General styling for the accordion container */
+.accordion-container {
+  width: 600px;
+  margin: 50px auto;
+  font-family: sans-serif;
+}
+
+/* Styling for each individual item */
+.accordion-item {
+  background-color: #fff;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden; /* Crucial for the animation */
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.accordion-item:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* The clickable question part */
+.accordion-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  background-color: #fff;
+  font-weight: 600;
+  color: #333;
+  transition: background-color 0.2s ease;
+}
+
+.accordion-question:hover {
+  background-color: #f9f9f9;
+}
+
+/* The plus/minus icon */
+.icon {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #888;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Rotate the icon when the item is open */
+.accordion-question.open .icon {
+  transform: rotate(45deg);
+  color: #007bff; /* Change color when active */
+}
+
+/* The answer part */
+.accordion-answer {
+  max-height: 0;
+  overflow: hidden;
+  background-color: #fff;
+  color: #555;
+  transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
+}
+
+/* The styles for the answer when the item is open */
+.accordion-answer.open {
+  max-height: 200px; /* Adjust if your content is longer */
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #eee;
+}
