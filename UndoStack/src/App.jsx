@@ -1,33 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useCallback, useEffect, useState } from 'react'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
 
+  const [input, setInput] = useState("")
+  const [history, setHistory] = useState([])
+  const [items, setItems] = useState([])
+
+
+
+
+  function handleChange(e) {
+    const newInput = e.target.value
+    setHistory(prev => [...prev, input])
+    setInput(newInput)
+    setItems([])
+  }
+
+  const handleHistory = useCallback(() => {
+    const lastItem = history[history.length - 1]
+    setItems(prev => ([...prev, input]))
+    setInput(lastItem)
+    setHistory(prev => prev.slice(0, -1))
+  }, [history,input])
+
+
+
+  const handleRedo = useCallback(() => {
+    const lastRedo = items[items.length - 1]
+    setHistory(prev => ([...prev, input]))
+    setInput(lastRedo)
+    setItems(prev => prev.slice(0, -1))
+  },[items,input])
+
+
+    useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.ctrlkey && e.key === 'z') handleHistory
+      if (e.ctrlkey && e.key === 'y') handleRedo
+      }
+
+      window.addEventListener('keydown', handleKeyDown)
+      return () => {
+        window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [handleHistory, handleRedo])
+
+  
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <h2>{input}</h2>
+      <input type="text" value={input} onChange={handleChange} />
+      <button onClick={handleRedo} disabled={items.length === 0}> Redo </button>
+      <button onClick={handleHistory} disabled={history.length === 0}> Undo </button>
     </>
   )
 }
